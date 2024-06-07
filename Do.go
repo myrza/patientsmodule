@@ -8,10 +8,9 @@ package patientsmodule
 import (
 	//"encoding/json"
 	"encoding/json"
-	"sort"
-
 	"encoding/xml"
 	"os"
+	"sort"
 )
 
 type paitent struct {
@@ -89,13 +88,13 @@ func Do(src string, tgt string) error {
 		return err
 	}
 	f.Close()
-	f, err = os.Open(tgt)
+	fo, err := os.Open(tgt)
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer fo.Close()
 
-	err = xml.NewDecoder(f).Decode(&d)
+	err = xml.NewDecoder(fo).Decode(&d)
 	if err != nil {
 		return err
 	}
