@@ -4,12 +4,20 @@ v1.1.0 версия с сортировкой по возрасту
 */
 
 package patientsmodule
+/*
+v2.0.0 читаем из файла json в файл xml без сортировки
+
+*/
+
+package main
 
 import (
+	//"encoding/json"
 	"encoding/json"
-	"io/ioutil"
+
+	"encoding/xml"
+	"fmt"
 	"os"
-	"sort"
 )
 
 type paitent struct {
@@ -18,10 +26,20 @@ type paitent struct {
 	Email string `"json:"email"`
 }
 
+type xml_patient struct {
+	Name  string `xml:"Name"`
+	Age   int    `xml:"Age"`
+	Email string `xml:"Email"`
+}
+type patients struct {
+	List []xml_patient `xml:"Patient"`
+}
+
 func Do(src string, tgt string) error {
 
 	f, err := os.Open(src)
 	if err != nil {
+
 		return err
 	}
 	defer f.Close()
@@ -37,27 +55,57 @@ func Do(src string, tgt string) error {
 		res = append(res, p)
 
 	}
-	// отсортируем по годам
+
+	/* не отсортируем по годам
 	sort.Slice(res[:], func(i, j int) bool {
-		return res[i].Age > res[j].Age
+		return res[i].Age < res[j].Age
 	})
+	*/
 
-	f, err = ioutil.TempFile("./", tgt)
+	f, err = os.Create(tgt)
 	if err != nil {
 		return err
 	}
 
-	err = json.NewEncoder(f).Encode(res)
+	f.WriteString(xml.Header)
+
+	x1 := xml_patient{
+		Name:  res[0].Name,
+		Age:   res[0].Age,
+		Email: res[0].Email,
+	}
+	x2 := xml_patient{
+		Name:  res[1].Name,
+		Age:   res[1].Age,
+		Email: res[1].Email,
+	}
+	x3 := xml_patient{
+		Name:  res[2].Name,
+		Age:   res[2].Age,
+		Email: res[2].Email,
+	}
+	d := patients{}
+	d.List = append(d.List, x1)
+	d.List = append(d.List, x2)
+	d.List = append(d.List, x3)
+
+	enc := xml.NewEncoder(f)
+	enc.Indent("", "    ")
+	err = enc.Encode(d)
 	if err != nil {
 		return err
 	}
-
-	err = f.Close()
-	if err != nil {
-		return err
-	}
-
 	f.Close()
+	f, err = os.Open(tgt)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	err = xml.NewDecoder(f).Decode(&d)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
