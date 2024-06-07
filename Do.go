@@ -8,7 +8,6 @@ package patientsmodule
 import (
 	//"encoding/json"
 	"encoding/json"
-	"sort"
 
 	"encoding/xml"
 	"os"
@@ -51,10 +50,10 @@ func Do(src string, tgt string) error {
 	}
 
 	// отсортируем по годам
-	sort.Slice(res[:], func(i, j int) bool {
+	/*sort.Slice(res[:], func(i, j int) bool {
 		return res[i].Age < res[j].Age
 	})
-
+	*/
 	f, err = os.Create(tgt)
 	if err != nil {
 		return err
