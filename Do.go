@@ -4,19 +4,18 @@ v2.1.0 версия с xml без сортировки
 */
 
 package patientsmodule
+
 /*
 v2.0.0 читаем из файла json в файл xml без сортировки
 
 */
 
-package main
-
 import (
 	//"encoding/json"
 	"encoding/json"
+	"sort"
 
 	"encoding/xml"
-	"fmt"
 	"os"
 )
 
@@ -60,7 +59,6 @@ func Do(src string, tgt string) error {
 	sort.Slice(res[:], func(i, j int) bool {
 		return res[i].Age < res[j].Age
 	})
-	
 
 	f, err = os.Create(tgt)
 	if err != nil {
