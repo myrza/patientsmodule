@@ -39,7 +39,7 @@ func Do(src string, tgt string) error {
 	}
 	// отсортируем по годам
 	sort.Slice(res[:], func(i, j int) bool {
-		return res[i].Age < res[j].Age
+		return res[i].Age > res[j].Age
 	})
 
 	f, err = ioutil.TempFile("./", tgt)
