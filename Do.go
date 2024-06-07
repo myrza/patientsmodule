@@ -1,5 +1,5 @@
 /*
-v2.0.0 версия с xml без сортировки
+v2.1.0 версия с xml без сортировки
 
 */
 
@@ -56,11 +56,11 @@ func Do(src string, tgt string) error {
 
 	}
 
-	/* не отсортируем по годам
+	// отсортируем по годам
 	sort.Slice(res[:], func(i, j int) bool {
 		return res[i].Age < res[j].Age
 	})
-	*/
+	
 
 	f, err = os.Create(tgt)
 	if err != nil {
